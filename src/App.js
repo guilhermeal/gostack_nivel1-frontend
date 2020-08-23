@@ -1,24 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Header from './components/Header'
 
 function App() {
+
+  // Antes de usar useState
+  // const projects = ['Desenvolvimento Web', 'Frontend web', 'React Native'];
+
+  // Com useState
+  const [projects, setProjects] = useState(['Desenvolvimento Web', 'Frontend web', 'React Native']);
+
+  function handleAddProject() {
+    // projects.push(`New Project :: ${Date.now()}`);
+    setProjects([...projects, `New Project :: ${Date.now()}`]);
+
+    console.log(projects);
+  }
+
   return (
     <>
-      <Header title="Homepage">
-        <ul>
-          <li>Homepage</li>
-          <li>Projects</li>
-        </ul>
-      </Header>
-      <Header title="Projects">
-        <ul>
-          <li>Homepage</li>
-          <li>Projects</li>
-          <li>Painel</li>
-          <li>Login</li>
-        </ul>
-      </Header>
+      <Header title="Projects" />
+        
+      <ul>
+        {projects.map(project => <li key={project}>{project}</li> )}
+      </ul>
+
+      <button type="button" onClick={handleAddProject} >Add Project</button>
     </>
 
   );
