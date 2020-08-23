@@ -1,33 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from './services/api';
 
-import './App.css';
-import backgroundImage from './assets/background.jpg';
+import './App.css'; 
 
 import Header from './components/Header'
 
 function App() {
 
-  // Antes de usar useState
-  // const projects = ['Desenvolvimento Web', 'Frontend web', 'React Native'];
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    api.get('/projects').then(response => {
+      setProjects(response.data)
+    });
+  }, []);
 
-  // Com useState
-  const [projects, setProjects] = useState(['Desenvolvimento Web', 'Frontend web', 'React Native']);
+  async function handleAddProject() {
+    // setProjects([...projects, `New Project :: ${Date.now()}`]);
+    
+    const response = await api.post('projects', {
+      title: `New Project :: ${Date.now()}`,
+      owner: 'Guilherme Almeida'
+    });
 
-  function handleAddProject() {
-    // projects.push(`New Project :: ${Date.now()}`);
-    setProjects([...projects, `New Project :: ${Date.now()}`]);
+    const project = response.data;
 
-    console.log(projects);
+    setProjects([...projects, project]);
   }
 
   return (
     <>
       <Header title="Projects" />
 
-      <img width={400} src={backgroundImage} alt="Background"/>
-        
       <ul>
-        {projects.map(project => <li key={project}>{project}</li> )}
+        {projects.map(project => <li key={project.id}>{project.title}</li> )}
       </ul>
 
       <button type="button" onClick={handleAddProject} >Add Project</button>
